@@ -1,5 +1,10 @@
 package com.encora.spark.breakable_toy_one.model;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.validation.constraints.Size;
+import org.springframework.boot.convert.DataSizeUnit;
 import org.springframework.cglib.core.Local;
 
 import java.time.LocalDate;
@@ -9,11 +14,22 @@ import java.util.UUID;
 public class Product {
     //Declare variables
     private UUID id;
+
+    @NotBlank(message = "Name is mandatory")
+    @Size(max = 120, message = "Name cannot be longer than 120 characters")
     private String name;
+
+    @NotBlank(message = "Category is mandatory")
     private String category;
+
+    @Positive(message = "Price must be higher than $0.0")
     private double unitPrice;
-    private LocalDate expirationDate;
+
+    private LocalDate expirationDate;//Optional
+
+    @PositiveOrZero(message = "Stock can't be negative")
     private int quantityInStock;
+
     private LocalDateTime creationDate;
     private LocalDateTime updateDate;
 
@@ -77,6 +93,7 @@ public class Product {
         this.quantityInStock = quantityInStock;
     }
 
+    //Try LocalDate instead of LocalDateTime
     public LocalDateTime getCreationDate(){
         return creationDate;
     }

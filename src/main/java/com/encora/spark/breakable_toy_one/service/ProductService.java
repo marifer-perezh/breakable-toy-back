@@ -3,15 +3,12 @@ package com.encora.spark.breakable_toy_one.service;
 import com.encora.spark.breakable_toy_one.model.Product;
 import com.encora.spark.breakable_toy_one.repository.ProductRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 
+import java.lang.Integer;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.Optional;
-import java.util.UUID;
-import java.util.stream.Collectors;
+
 
 @Service
 public class ProductService {
@@ -25,22 +22,22 @@ public class ProductService {
     //Create
     public Product createProduct(Product product){
         if(product.getId() == null){
-            product.setId(UUID.randomUUID());
+            
             product.setCreationDate(LocalDateTime.now());
         }
         product.setUpdateDate(LocalDateTime.now());
         return repo.save(product);
     }
     //Read
-    public Optional<Product> getProductById(UUID id){
+    public Optional<Product> getProductById(Integer id){
         return repo.findById(id);
     }
 
     public List<Product> getAllProducts(){
-        return repo.findAll(null, null, null);
+        return repo.findAll();
     }
     //Update
-    public Product updateProduct(UUID id, Product productDetails) {
+    public Product updateProduct(Integer id, Product productDetails) {
         return repo.findById(id)
                 .map(existingProduct -> {
                     existingProduct.setName(productDetails.getName());
@@ -48,50 +45,15 @@ public class ProductService {
                     existingProduct.setUnitPrice(productDetails.getUnitPrice());
                     existingProduct.setQuantityInStock(productDetails.getQuantityInStock());
                     existingProduct.setExpirationDate(productDetails.getExpirationDate());
+                    existingProduct.setUpdateDate(LocalDateTime.now());
                     return repo.save(existingProduct);
                 })
                 .orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
     }
     //Delete
-    public void deleteProduct(UUID id) {
+    public void deleteProduct(Integer id) {
         repo.deleteById(id);
     }
-
-    /*
-    public List<Product> getAll() {
-        return repo.findAll();
-    }
-
-    public Product create(Product product) {
-        product.setId(UUID.randomUUID());
-        product.setCreationDate(LocalDateTime.now());
-        product.setUpdateDate(LocalDateTime.now());
-        repo.save(product);
-        return product;
-    }
-
-        public Product update(UUID id, Product updated) {
-        return repo.findById(id)
-                .map(p -> {
-                    p.setName(updated.getName());
-                    p.setCategory(updated.getCategory());
-                    p.setUnitPrice(updated.getUnitPrice());
-                    p.setExpirationDate(updated.getExpirationDate());
-                    p.setQuantityInStock(updated.getQuantityInStock());
-                    p.setUpdateDate(LocalDateTime.now());
-                    repo.update(p);
-                    return p;
-                })
-                .orElseThrow(() -> new RuntimeException("Product not found"));
-    }
-    public Optional<Product> findById(UUID id) {
-        return repo.findById(id);
-    }
-    public void delete(UUID id) {
-        repo.deleteById(id);
-    }
-
-    */
 
     //Advanced functions
     public List<Product> getFilteredProducts(
@@ -101,7 +63,7 @@ public class ProductService {
             String sortBy,
             String sortDirection) {
 
-        List<Product> filteredProducts = repo.findAll(name, categories, inStock);
+        List<Product> filteredProducts = repo.findAll();
 
         Comparator<Product> comparator = getComparator(sortBy);
         if ("desc".equalsIgnoreCase(sortDirection)) {
@@ -122,7 +84,7 @@ public class ProductService {
             String sortDirection) {
 
         // 1. Filtrate
-        List<Product> filteredProducts = repo.findAll(name, categories, inStock);
+        List<Product> filteredProducts = repo.findAll();
 
         // 2. Order
         Comparator<Product> comparator = getComparator(sortBy);
@@ -150,26 +112,33 @@ public class ProductService {
         );
        }
 
-    public void markOutOfStock(UUID id) {
-        if (repo.findById(id).isEmpty()) {
+    public void markOutOfStock(Integer id) {
+        Optional<Product> product = repo.findById(id);
+        if (product.isEmpty()) {
             throw new RuntimeException("Product not found");
         }
-        repo.markOutOfStock(id);
+        Product productUpdate = product.get();
+        productUpdate.setQuantityInStock(0);
+        repo.save(productUpdate);
     }
 
-    public void markInStock(UUID id, int quantity) {
-        if (repo.findById(id).isEmpty()) {
+    public void markInStock(Integer id, int quantity) {
+        Optional<Product> product = repo.findById(id);
+        if (product.isEmpty()) {
             throw new RuntimeException("Product not found");
         }
-        repo.markInStock(id, quantity);
+        Product productUpdate = product.get();
+        productUpdate.setQuantityInStock(quantity);
+        repo.save(productUpdate);
     }
 
+    @SuppressWarnings("unchecked")
     public Map<String, Object> getInventoryMetrics() {
-        return repo.getInventoryMetrics();
+        // TODO: Require implementation next integration
+        return Collections.EMPTY_MAP;
     }
 
     //Private Methods
-
     private Comparator<Product> getComparator(String sortBy) {
         return switch (sortBy != null ? sortBy.toLowerCase() : "name") {
             case "price" -> Comparator.comparing(Product::getUnitPrice);

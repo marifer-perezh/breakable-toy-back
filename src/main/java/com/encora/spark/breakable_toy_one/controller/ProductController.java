@@ -1,15 +1,13 @@
 package com.encora.spark.breakable_toy_one.controller;
 
 import com.encora.spark.breakable_toy_one.model.Product;
-import com.encora.spark.breakable_toy_one.repository.ProductRepository;
 import com.encora.spark.breakable_toy_one.service.ProductService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
+import java.lang.Integer;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/products")
@@ -28,7 +26,7 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Product> getProductById(@PathVariable UUID id) {
+    public ResponseEntity<Product> getProductById(@PathVariable Integer id) {
         return service.getProductById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -36,7 +34,7 @@ public class ProductController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Product> updateProduct(
-            @PathVariable UUID id,
+            @PathVariable Integer id,
             @RequestBody Product productDetails
     ) {
         Product updatedProduct = service.updateProduct(id, productDetails);
@@ -44,7 +42,7 @@ public class ProductController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable UUID id) {
+    public ResponseEntity<Void> deleteProduct(@PathVariable Integer id) {
         service.deleteProduct(id);
         return ResponseEntity.noContent().build();
     }
@@ -72,14 +70,14 @@ public class ProductController {
 
     //Stock
     @PostMapping("/{id}/out-of-stock")
-    public ResponseEntity<Void> markOutOfStock(@PathVariable UUID id) {
+    public ResponseEntity<Void> markOutOfStock(@PathVariable Integer id) {
         service.markOutOfStock(id);
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/{id}/in-stock")
     public ResponseEntity<Void> markInStock(
-            @PathVariable UUID id,
+            @PathVariable Integer id,
             @RequestParam(defaultValue = "10") int quantity
     ) {
         service.markInStock(id, quantity);
@@ -115,23 +113,23 @@ public class ProductController {
     }
 
     @PostMapping("/{id}/outofstock")
-    public void markOutOfStock(@PathVariable UUID id) {
+    public void markOutOfStock(@PathVariable Integer id) {
         service.markOutOfStock(id);
     }
 
     @PutMapping("/{id}")
-    public Product updateProduct(@PathVariable UUID id, @RequestBody Product updated) {
+    public Product updateProduct(@PathVariable Integer id, @RequestBody Product updated) {
         return service.update(id, updated);
     }
 
     @PutMapping("/{id}/instock")
-    public void markInStock(@PathVariable UUID id,
+    public void markInStock(@PathVariable Integer id,
                             @RequestParam(defaultValue = "10") int quantity) {
         service.markInStock(id, quantity);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteProduct(@PathVariable UUID id) {
+    public void deleteProduct(@PathVariable Integer id) {
         service.delete(id);
     }
     */

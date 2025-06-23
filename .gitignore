@@ -1,2 +1,14 @@
-.idea
+### Maven ###
 target
+### Mac OS ###
+.DS_Store
+### IntelliJ ###
+.idea/
+**/*.iml
+### Compiled
+*class
+*.idea
+*.log
+output/
+build/
+out/

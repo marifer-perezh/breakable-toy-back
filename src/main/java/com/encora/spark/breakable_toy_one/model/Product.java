@@ -48,7 +48,6 @@ public class Product {
         this.id = id;
         this.name = name;
         this.category = category;
-        this.unitPrice = unitPrice;
         this.expirationDate = expirationDate;
         this.quantityInStock = quantityInStock;
         this.creationDate = creationDate;

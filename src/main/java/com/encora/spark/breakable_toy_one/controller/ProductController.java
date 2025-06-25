@@ -2,8 +2,13 @@ package com.encora.spark.breakable_toy_one.controller;
 
 import com.encora.spark.breakable_toy_one.model.Product;
 import com.encora.spark.breakable_toy_one.service.ProductService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 
 import java.lang.Integer;
 import java.util.List;
@@ -49,22 +54,16 @@ public class ProductController {
 
     // Advance Search
     @GetMapping
-    public ResponseEntity<List<Product>> getProducts(
+    public ResponseEntity<Page<Product>> getProducts(
             @RequestParam(required = false) String name,
             @RequestParam(required = false) List<String> categories,
             @RequestParam(required = false) Boolean inStock,
-            //@RequestParam(defaultValue = "0") int page,
-            //@RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "name") String sortBy,
-            @RequestParam(defaultValue = "asc") String sortDirection
-    )
-    {
-        /*Map<String, Object> response = service.getFilteredAndPaginatedProducts(
-                name, categories, inStock, page, size, sortBy, sortDirection
-        );*/
-
-        List<Product> products = service.getFilteredProducts(name, categories, inStock,sortBy, sortDirection);
-        //return ResponseEntity.ok(response);
+            //@RequestParam(defaultValue = "name") String sortBy,
+            //@RequestParam(defaultValue = "asc") String sortDirection,
+            Pageable pageable
+    ) {
+        //Page<Product> products = service.getFilteredProducts(name, categories, inStock, sortBy, sortDirection, pageable);
+        Page<Product> products = service.getFilteredProducts(name, categories, inStock, pageable);
         return ResponseEntity.ok(products);
     }
 
@@ -91,46 +90,11 @@ public class ProductController {
         return ResponseEntity.ok(metrics);
     }
 
-    /*
-    @GetMapping("/all")
-    public List<Product> getAll() {
-        return service.getAll();
+    //Categorias dinamicas
+    @GetMapping("/categories")
+    public ResponseEntity<List<String>> getAllCategories(){
+        List<String> categories = service.getAllCategories();
+        return ResponseEntity.ok(categories);
     }
 
-    @GetMapping
-    public ResponseEntity<List<Product>> getProducts(
-            @RequestParam(required = false) String name,
-            @RequestParam(required = false) List<String> categories,
-            @RequestParam(defaultValue = "0") int page
-    ) {
-
-        return ResponseEntity.ok(service.getFilteredProducts(name, categories, page));
-    }
-
-    @PostMapping
-    public Product createProduct(@RequestBody Product product) {
-        return service.create(product);
-    }
-
-    @PostMapping("/{id}/outofstock")
-    public void markOutOfStock(@PathVariable Integer id) {
-        service.markOutOfStock(id);
-    }
-
-    @PutMapping("/{id}")
-    public Product updateProduct(@PathVariable Integer id, @RequestBody Product updated) {
-        return service.update(id, updated);
-    }
-
-    @PutMapping("/{id}/instock")
-    public void markInStock(@PathVariable Integer id,
-                            @RequestParam(defaultValue = "10") int quantity) {
-        service.markInStock(id, quantity);
-    }
-
-    @DeleteMapping("/{id}")
-    public void deleteProduct(@PathVariable Integer id) {
-        service.delete(id);
-    }
-    */
 }

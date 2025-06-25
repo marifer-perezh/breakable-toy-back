@@ -3,10 +3,7 @@ package com.encora.spark.breakable_toy_one.service;
 import com.encora.spark.breakable_toy_one.model.Product;
 import com.encora.spark.breakable_toy_one.repository.ProductRepository;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import org.springframework.data.domain.Pageable;
@@ -83,21 +80,6 @@ public class ProductService {
             Pageable pageable) {
 
         Specification<Product> spec = hasNameLike(name).and(isInCategories(categories)).and(isInStock(inStock));
-
-        //Sort sortByName = Sort.by("name");
-        //pageable = (pageable == null) ? PageRequest.of(0, 10): pageable;
-        // pageable = (pageable == null) ? PageRequest.of(0, 10, Sort.by("name")): pageable;
-        // pageable = (pageable == null) ? PageRequest.of(0, 10, Sort.by("quantityInStock").descending().and(Sort.by("name"))): pageable;
-        // pageable = (pageable == null) ? PageRequest.of(0, 10, sortByName.descending()): pageable;
-        //Page<Product> filteredProducts = repo.findAll(pageable);
-
-        //Comparator<Product> comparator = getComparator(sortBy);
-        //if ("desc".equalsIgnoreCase(sortDirection)) {
-        //    comparator = comparator.reversed();
-        //}
-        //filteredProducts.sort(comparator);
-
-        //return filteredProducts;
         return repo.findAll(spec, pageable);
     }
 

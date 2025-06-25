@@ -3,9 +3,7 @@ package com.encora.spark.breakable_toy_one.controller;
 import com.encora.spark.breakable_toy_one.model.Product;
 import com.encora.spark.breakable_toy_one.service.ProductService;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -58,11 +56,8 @@ public class ProductController {
             @RequestParam(required = false) String name,
             @RequestParam(required = false) List<String> categories,
             @RequestParam(required = false) Boolean inStock,
-            //@RequestParam(defaultValue = "name") String sortBy,
-            //@RequestParam(defaultValue = "asc") String sortDirection,
             Pageable pageable
     ) {
-        //Page<Product> products = service.getFilteredProducts(name, categories, inStock, sortBy, sortDirection, pageable);
         Page<Product> products = service.getFilteredProducts(name, categories, inStock, pageable);
         return ResponseEntity.ok(products);
     }

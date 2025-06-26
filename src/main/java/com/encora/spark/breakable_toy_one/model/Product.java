@@ -1,19 +1,24 @@
 package com.encora.spark.breakable_toy_one.model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
-import org.springframework.boot.convert.DataSizeUnit;
-import org.springframework.cglib.core.Local;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+@Entity
 public class Product {
     //Declare variables
-    private UUID id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Integer id;
 
     @NotBlank(message = "Name is mandatory")
     @Size(max = 120, message = "Name cannot be longer than 120 characters")
@@ -37,13 +42,12 @@ public class Product {
     public Product(){}
 
     //Constructor completo
-    public Product(UUID id, String name, String category, double unitPrice,
+    public Product(Integer id, String name, String category, double unitPrice,
                    LocalDate expirationDate,int quantityInStock,
                    LocalDateTime creationDate, LocalDateTime updateDate){
         this.id = id;
         this.name = name;
         this.category = category;
-        this.unitPrice = unitPrice;
         this.expirationDate = expirationDate;
         this.quantityInStock = quantityInStock;
         this.creationDate = creationDate;
@@ -51,10 +55,10 @@ public class Product {
     }
 
     //Getters y Setters
-    public UUID getId(){
+    public Integer getId(){
         return id;
     }
-    public void setId(UUID id){
+    public void setId(Integer id){
         this.id = id;
     }
 

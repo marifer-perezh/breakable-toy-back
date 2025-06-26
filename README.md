@@ -1,4 +1,4 @@
-## Breakable Toy — Inventory Manager - Frontend
+## Breakable Toy — Inventory Manager - Backend
 
 This project is part of the Spark Internship Program by Encora.
 It is a full-stack Inventory Management System built with:
